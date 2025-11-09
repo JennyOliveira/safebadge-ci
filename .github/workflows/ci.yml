@@ -26,8 +26,7 @@ jobs:
 
       - name: Run tests
         run: |
-          # Adiciona a raiz do repositório ao PYTHONPATH para que o Python encontre 'app'
-          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          export PYTHONPATH=$(pwd)
           pytest -q
 
       - name: Lint (opcional)
