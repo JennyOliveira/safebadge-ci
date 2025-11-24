@@ -36,7 +36,9 @@ jobs:
       - name: Set image tag
         id: set-image
         run: |
-          IMAGE_TAG=ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:ci-${{ github.sha }}
+          # usa github.repository (owner/repo) e força lowercase para evitar erros
+          REPO_LOWER="${{ toLower(github.repository) }}"
+          IMAGE_TAG="ghcr.io/${REPO_LOWER}:ci-${{ github.sha }}"
           echo "image=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
   build-and-push:
@@ -59,10 +61,10 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:ci-${{ github.sha }}
-            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
+            ghcr.io/${{ toLower(github.repository) }}:ci-${{ github.sha }}
+            ghcr.io/${{ toLower(github.repository) }}:latest
 
       - name: Set pushed image output
         id: image-output
         run: |
-          echo "IMAGE=ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:ci-${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "IMAGE=ghcr.io/${{ toLower(github.repository) }}:ci-${{ github.sha }}" >> $GITHUB_OUTPUT
