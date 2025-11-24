@@ -46,12 +46,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
+      - name: Login to GitHub Container Registry (GHCR)
         uses: docker/login-action@v2
         with:
-          registry: docker.io
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push image
         uses: docker/build-push-action@v4
@@ -66,37 +66,3 @@ jobs:
         id: image-output
         run: |
           echo "IMAGE=ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:ci-${{ github.sha }}" >> $GITHUB_OUTPUT
-
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare deploy package
-        run: tar -czf deploy.tar.gz deploy
-
-      - name: Copy deploy scripts to server
-        uses: appleboy/scp-action@v0.1.6
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          source: "deploy.tar.gz"
-          target: "/home/${{ secrets.SSH_USER }}/"
-
-      - name: Run deploy on server
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd /home/${{ secrets.SSH_USER }}
-            tar -xzf deploy.tar.gz
-            chmod +x deploy/deploy.sh
-            IMAGE="ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:ci-${{ github.sha }}"
-            ./deploy/deploy.sh "$IMAGE"
