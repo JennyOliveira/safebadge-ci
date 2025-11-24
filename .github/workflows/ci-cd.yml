@@ -37,7 +37,7 @@ jobs:
         id: set-image
         run: |
           # usa github.repository (owner/repo) e força lowercase para evitar erros
-          REPO_LOWER="${{ toLower(github.repository) }}"
+          REPO_LOWER=${{ toLower(github.repository) }}
           IMAGE_TAG="ghcr.io/${REPO_LOWER}:ci-${{ github.sha }}"
           echo "image=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
