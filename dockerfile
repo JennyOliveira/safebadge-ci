@@ -1,4 +1,3 @@
-# Dockerfile
 FROM python:3.11-slim
 
 LABEL maintainer="Jenny <seu-email@exemplo.com>"
