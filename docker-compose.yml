@@ -1,1 +1,11 @@
+version: "3.8"
 
+services:
+  safebadge:
+    build: .
+    image: ${IMAGE_NAME:-safebadge:latest}
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV=${ENV:-dev}
