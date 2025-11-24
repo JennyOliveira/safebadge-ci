@@ -13,3 +13,11 @@ Automatizar build, testes e provisionamento de infraestrutura usando boas práti
 
 # Relatório — SafeBadge (Fase 2)
 Nesta fase foi implementada a containerização da aplicação, pipeline CI que executa testes e lint e build da imagem Docker com push para o GitHub Container Registry (GHCR). Inclui também script de deploy pronto para uso em servidor com Docker
+
+# SafeBadge — Fase 2 (CD e Containerização)
+
+## O que foi implementado (Fase 2)
+- Containerização com Docker (Dockerfile)
+- Orquestração local com docker-compose
+- GitHub Actions: testes (pytest), lint (flake8), build e push da imagem para GHCR
+- Script de deploy (`deploy/deploy.sh`) pronto para uso em servidor Docker
